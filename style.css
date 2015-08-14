@@ -40,10 +40,14 @@ span {
 }
 .end-message {
     position:absolute;
+    text-align: center;
     top: 100px;
     left: 100px;
     width: 400px;
     height: 400px;
     background-color: lemonchiffon;
     border: 1px solid;
+}
+#search-value-box {
+    color: navy;
 }

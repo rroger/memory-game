@@ -27,20 +27,28 @@ function shuffle(array_) {
 }
 
 function gameStep(event) {
-    $(event.target).toggleClass('open-card').css('opacity','100');
+    console.log(event.target);
+    console.log($(event.target).prop('tagName'))
+    if ($(event.target).prop('tagName') === 'DIV') {
+        $(event.target).toggleClass('open-card').css('opacity', '100');
+    } else if ($(event.target).prop('tagName') === 'SPAN') {
+        $(event.target).parent().toggleClass('open-card').css('opacity', '100');
+    }
     $(event.target).off('click');
     var eval_value = $('#board').data('card_value');
-
+    var game_over = false;
     $('.open-card').each(function () {
         if ($(this).text() != eval_value) {
             $('.card').off('click');
-            $('#board_tbl').prepend('<div class="end-message"><h2>Game Over!</h2></div>');
-            $(this).css('background-color','salmon')
+            $('#board_tbl').prepend('<div class="end-message"><h2><span>Game Over!</span></h2></div>');
+            $(this).css('background-color','salmon');
+            game_over = true;
         }
     })
-    if ($('.open-card').length === 3) {
-        $('#board_tbl').append('<div class="end-message"><h2>You have won</h2></div>');
+    if (($('.open-card').length === 3 ) && (! game_over)) {
         $('.card').off('click');
+        $('#board_tbl').append('<div class="end-message"><h2><span>You have won</span></h2></div>');
+
     }
 }
 
@@ -71,7 +79,7 @@ function hide_all_cards(fadeout_duration) {
     setTimeout(function () {
         var searched_card_value = get_random_card_value();
         $('#board').data('card_value', searched_card_value);
-        $('#header').append('<h3>Please open cards with ' + searched_card_value + '</h3>');
+        $('#search-value-box').text('Please open cards with ' + searched_card_value + '.');
     }, fadeout_duration);
 
 }
@@ -81,8 +89,6 @@ function hide_all_cards(fadeout_duration) {
 function add_click_event_to_cards() {
 
     $('.card').each(function () {
-        console.log("added for");
-        console.log($(this));
         $(this).click(gameStep);
     })
 
