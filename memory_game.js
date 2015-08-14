@@ -27,19 +27,20 @@ function shuffle(array_) {
 }
 
 function gameStep(event) {
-    $(event.target).children('div').toggleClass('open-card').css('display','block');
-    var count = 0
-    var test = $('#board').data('card_value');
+    $(event.target).toggleClass('open-card').css('opacity','100');
+    $(event.target).off('click');
+    var eval_value = $('#board').data('card_value');
 
     $('.open-card').each(function () {
-        if ($(this).text() != test) {
-            $('#header').append('<h2>Game over!</h2>');
-            alert('Game Over');
-            $('body').html('<h1>Game Over!</h1>');
+        if ($(this).text() != eval_value) {
+            $('.card').off('click');
+            $('#board_tbl').prepend('<div class="end-message"><h2>Game Over!</h2></div>');
+            $(this).css('background-color','salmon')
         }
     })
     if ($('.open-card').length === 3) {
-        $('body').html('<h1>You have won</h1>');
+        $('#board_tbl').append('<div class="end-message"><h2>You have won</h2></div>');
+        $('.card').off('click');
     }
 }
 
@@ -47,7 +48,7 @@ function shuffle_game_values(){
     var game_values = shuffle(GAME_VALUES.slice());
     $('.card').each(function( index ) {
         //$(this).text('test');
-        $(this).text(game_values.pop());
+        $(this).html('<span>' + game_values.pop() + '</span>');
     })
 }
 
@@ -63,21 +64,23 @@ function hide_all_cards(fadeout_duration) {
     if ( fadeout_duration === undefined ) {
         fadeout_duration = 5000;
     }
-    $('.card').fadeOut(fadeout_duration, function () {
-        add_click_event_to_cards();
+    $('.card').fadeTo(fadeout_duration, 0);
+    // Use Timeout instead of function callback in fadeOut, because in fadeOut it would be called for
+    // each element in .card set.
+    setTimeout(add_click_event_to_cards, fadeout_duration);
+    setTimeout(function () {
         var searched_card_value = get_random_card_value();
         $('#board').data('card_value', searched_card_value);
         $('#header').append('<h3>Please open cards with ' + searched_card_value + '</h3>');
+    }, fadeout_duration);
 
-    });
-    //setTimeout(add_click_event_to_cards, fadeout_duration);
 }
 
 
 
 function add_click_event_to_cards() {
 
-    $('.td').each(function () {
+    $('.card').each(function () {
         console.log("added for");
         console.log($(this));
         $(this).click(gameStep);
