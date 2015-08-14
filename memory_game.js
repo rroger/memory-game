@@ -27,8 +27,7 @@ function shuffle(array_) {
 }
 
 function gameStep(event) {
-    console.log(event.target);
-    console.log($(event.target).prop('tagName'))
+    play_sound();
     if ($(event.target).prop('tagName') === 'DIV') {
         $(event.target).toggleClass('open-card').css('opacity', '100');
     } else if ($(event.target).prop('tagName') === 'SPAN') {
@@ -95,7 +94,7 @@ function add_click_event_to_cards() {
 }
 
 function play_sound() {
-    var snd = new Audio("sound.mp3");
+    var snd = new Audio("turn_card.mp3");
     snd.play();
 }
 
