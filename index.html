@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Memory Game</title>
+    <link href="style.css" rel="stylesheet">
+    <script src="jQuery.js"></script>
+    <script src="memory_game.js"></script>
+
+</head>
+<body>
+
+<p id="header">
+    <h1>Memory Game</h1>
+    <p>Try to pick the same three elements.</p>
+    <p>To shuffle and start a new game, just reload the page.</p>
+</div>
+
+
+<div id="board">
+    <table id="board_tbl">
+        <tr id="row1">
+            <td id="r1c1" class="td"><div id="card1" class="card"></div></td>
+            <td id="r1c2" class="td"><div id="card2" class="card"></div></td>
+            <td id="r1c3" class="td"><div id="card3" class="card"></div></td>
+        </tr>
+        <tr id="row2">
+            <td id="r2c1" class="td"><div id="card4" class="card"></div></td>
+            <td id="r2c2" class="td"><div id="card5" class="card"></div></td>
+            <td id="r2c3" class="td"><div id="card6" class="card"></div></td>
+        </tr>
+        <tr id="row3">
+            <td id="r3c1" class="td"><div id="card7" class="card"></div></td>
+            <td id="r3c2" class="td"><div id="card8" class="card"></div></td>
+            <td id="r3c3" class="td"><div id="card9" class="card"></div></td>
+        </tr>
+    </table>
+
+</div>
+<script type="text/javascript">
+    $(shuffle_game_values());
+    $(hide_all_cards());
+    //$(play_sound());
+    $(console.log("And it does not block.."));
+</script>
+</body>
+</html>
