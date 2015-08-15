@@ -4,6 +4,21 @@
 
 var GAME_VALUES = ['a','a','a','b','b','b','c','c','c']
 
+function init_game() {
+  generate_board();
+  generate_game_values();
+  shuffle_game_values();
+  hide_all_cards();
+}
+
+function generate_board() {
+
+}
+
+function generate_game_values() {
+
+}
+
 function shuffle(array_) {
     /* http://stackoverflow.com/questions/2450954/how-to-randomize-shuffle-a-javascript-array
      */
@@ -87,6 +102,6 @@ function hide_all_cards(fadeout_duration) {
 }
 
 function play_sound() {
-    var snd = new Audio("turn_card.mp3");
+    var snd = new Audio("media/turn_card.mp3");
     snd.play();
 }
