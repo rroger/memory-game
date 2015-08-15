@@ -46,7 +46,7 @@ function gameStep(event) {
     })
     if (($('.open-card').length === 3 ) && (! game_over)) {
         $('.card').off('click');
-        $('#board_tbl').append('<div class="end-message"><h2><span>You have won</span></h2></div>');
+        $('#board_tbl').append('<div class="end-message"><h2><span>You have won!</span></h2></div>');
 
     }
 }
@@ -71,10 +71,13 @@ function hide_all_cards(fadeout_duration) {
     if ( fadeout_duration === undefined ) {
         fadeout_duration = 5000;
     }
-    $('.card').fadeTo(fadeout_duration, 0);
-    // Use Timeout instead of function callback in fadeOut, because in fadeOut it would be called for
-    // each element in .card set.
-    setTimeout(add_click_event_to_cards, fadeout_duration);
+
+    $('.card').fadeTo(fadeout_duration, 0, function(){
+      $(this).click(gameStep); // Add click event when all cards are hidden.
+    });
+
+    // Use Timeout instead of function callback in fadeTo, because
+    // the code below should only be called once and not for every card.
     setTimeout(function () {
         var searched_card_value = get_random_card_value();
         $('#board').data('card_value', searched_card_value);
@@ -83,18 +86,7 @@ function hide_all_cards(fadeout_duration) {
 
 }
 
-
-
-function add_click_event_to_cards() {
-
-    $('.card').each(function () {
-        $(this).click(gameStep);
-    })
-
-}
-
 function play_sound() {
     var snd = new Audio("turn_card.mp3");
     snd.play();
 }
-
