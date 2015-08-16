@@ -17,14 +17,10 @@ span {
 }
 .row {
     display: table-row;
-    height: 33%;
-    width: 100%;
 }
 .cell {
     display: table-cell;
     border: 1px solid;
-    height: 33%;
-    width: 33%;
 }
 .card {
     text-align: center;
@@ -39,7 +35,7 @@ span {
     border: 3px solid;
     border-color: aquamarine;
 }
-.end-message {
+#end-message {
     position:absolute;
     text-align: center;
     top: 100px;
@@ -51,4 +47,7 @@ span {
 }
 #search-value-box {
     color: navy;
+}
+#board_size, #fadeout_duration {
+  width: 20px;
 }

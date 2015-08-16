@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Memory Game</title>
-    <script type="text/javascript" src="js/jss.js"></script>
+
     <link href="css/style.css" rel="stylesheet">
+    <script type="text/javascript" src="js/jss.min.js"></script>
     <script src="js/jQuery.js"></script>
     <script src="js/memory_game.js"></script>
 
@@ -13,34 +14,21 @@
 
 <div id="header">
     <h1>Memory Game</h1>
-    <p>Try to pick the same three elements.</p>
-    <p>To shuffle and start a new game, just reload the page.</p>
+    <p>Try to pick the same three elements.<br/>
+    To shuffle and start a new game, just reload the page.</p>
+    <p>Number of card symbols: <input id="board_size" type="text" value="3"/>
+      Time to learn symbol positions: <input id="fadeout_duration" type="text" value="5"/> secs
+      <input id="generate" type="button" value="Generate!"/></p>
     <p><div id="search-value-box">&nbsp;</div></p>
 </div>
 
 
 <div id="board">
-    <div id="board_tbl" class="table">
-        <div id="row1" class="row">
-            <div id="r1c1" class="cell"><div id="card1" class="card"></div></div>
-            <div id="r1c2" class="cell"><div id="card2" class="card"></div></div>
-            <div id="r1c3" class="cell"><div id="card3" class="card"></div></div>
-        </div>
-        <div id="row2" class="row">
-            <div id="r2c1" class="cell"><div id="card4" class="card"></div></div>
-            <div id="r2c2" class="cell"><div id="card5" class="card"></div></div>
-            <div id="r2c3" class="cell"><div id="card6" class="card"></div></div>
-        </div>
-        <div id="row3" class="row">
-            <div id="r3c1" class="cell"><div id="card7" class="card"></div></div>
-            <div id="r3c2" class="cell"><div id="card8" class="card"></div></div>
-            <div id="r3c3" class="cell"><div id="card9" class="card"></div></div>
-        </div>
-    </div>
-
+    <div id="board_tbl" class="table"></div>
 </div>
 <script type="text/javascript">
     $(init_game());
+    $("#generate").click(init_game);
 </script>
 </body>
 </html>
