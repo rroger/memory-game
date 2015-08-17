@@ -7,7 +7,8 @@ var game_values_template = ['a','a','a','b','b','b','c','c','c']
 function init_game() {
   var board_size = Number($('#board_size').val());
   var fadeout_duration = Number($('#fadeout_duration').val());
-  console.log(fadeout_duration);
+
+  //Check input values:
   if ( ! ( ( board_size >= 2 ) && ( board_size <= 26 ) ) ) {
     alert("Please type a game size >= 2!");
     return;
@@ -29,7 +30,7 @@ function generate_board(board_size) {
   var board_tbl = $("#board_tbl")
   board_tbl.html("");
   for (var i=0; i < board_size; i++) {
-    var row = $('<div id="row' + i + j + '" class="row"></div>');
+    var row = $('<div id="row' + i + '" class="row"></div>');
     board_tbl.append(row);
     for (var j=0; j < board_size; j++) {
       var cell = $('<div id="r' + i + 'c' + j + '" class="cell"></div>');
