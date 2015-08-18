@@ -2,7 +2,7 @@
  * Created by rruettimann on 14.08.15.
  */
 
-var game_values_template = ['a','a','a','b','b','b','c','c','c']
+//var game_values_template = ['a','a','a','b','b','b','c','c','c']
 
 function init_game() {
   var board_size = Number($('#board_size').val());
@@ -17,16 +17,17 @@ function init_game() {
     alert("Please type a fadeout duration >= 0.4 secs!");
     return;
   }
+  
   generate_board(board_size);
   adapt_style(board_size);
   clear_value_to_search();
-  generate_game_values(board_size);
-  shuffle_game_values();
   hide_all_cards(fadeout_duration*1000);
 }
 
 function generate_board(board_size) {
   // board_size should be an integer >= 2 and <= 26.
+  var game_values = generate_game_values(board_size);
+  game_values = shuffle(game_values);
   var board_tbl = $("#board_tbl")
   board_tbl.html("");
   for (var i=0; i < board_size; i++) {
@@ -35,6 +36,9 @@ function generate_board(board_size) {
     for (var j=0; j < board_size; j++) {
       var cell = $('<div id="r' + i + 'c' + j + '" class="cell"></div>');
       var card = $('<div id="card' + (i*board_size + j) + '" class="card"></div>');
+      var game_value = game_values.pop();
+      card.html('<span>' + game_value + '</span>');
+      $(card).toggleClass(game_value);
       cell.append(card);
       row.append(cell);
     }
@@ -80,13 +84,14 @@ function adapt_style(board_size) {
 
 function generate_game_values(board_size) {
   // board_size should be an integer >= 2 and <= 26.
-  game_values_template = [];
+  var game_values = [];
   for (var i = 0; i < board_size; i++) {
     var sym = String.fromCharCode("a".charCodeAt(0) + i);
     for (var j = 0; j < board_size; j++) {
-      game_values_template.push(sym);
+      game_values.push(sym);
     }
   }
+  return game_values;
 }
 
 function shuffle(array_) {
@@ -115,41 +120,53 @@ function clear_value_to_search() {
   $('#search-value-box').html('&nbsp;');
 }
 
-function gameStep(event) {
+function game_step(event) {
     play_sound();
-    if ($(event.target).prop('tagName') === 'DIV') {
-        $(event.target).toggleClass('open-card').css('opacity', '100');
-    } else if ($(event.target).prop('tagName') === 'SPAN') {
-        $(event.target).parent().toggleClass('open-card').css('opacity', '100');
-    }
-    $(event.target).off('click');
-    var eval_value = $('#board').data('card_value');
-    var game_over = false;
-    $('.open-card').each(function () {
-        if ($(this).text() != eval_value) {
-            // Game over!
-            $('.card').off('click');
-            $('#board_tbl').prepend('<div id="end-message"><h2><span>Game Over!</span></h2></div>');
-            $(this).css('background-color','salmon');
-            $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
-            game_over = true;
-        }
-    })
-    if (($('.open-card').length === Number($('#board_size').val()) ) && (! game_over)) {
-        // Game won!
-        $('.card').off('click');
-        $('#board_tbl').append('<div id="end-message"><h2><span>You have won!</span></h2></div>');
-        $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
+    turn_card(event);
+    var game_status = get_game_status(event);
 
+    if (game_status === 'won') {
+      game_won();
+    } else if (game_status === 'game_over') {
+      game_over();
     }
 }
 
-function shuffle_game_values(){
-    var game_values = shuffle(game_values_template.slice());
-    $('.card').each(function( index ) {
-        //$(this).text('test');
-        $(this).html('<span>' + game_values.pop() + '</span>');
-    })
+function get_game_status(event) {
+  var eval_value = $('#board').data('card_value');
+
+  if ($('.open-card.' + eval_value).length != $('.open-card').length) {
+    // this means there is a card open, that has an other card value than
+    // the searched card value, ergo it's game over.
+    return 'game_over';
+  }
+
+  if ($('.open-card').length === Number($('#board_size').val()) ) {
+    return 'won';
+  }
+  return 'undecided';
+}
+
+function game_won(){
+  $('.card').off('click');
+  $('#board_tbl').append('<div id="end-message"><h2><span>You have won!</span></h2></div>');
+  $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
+}
+
+function game_over(){
+  $('.card').off('click');
+  $('#board_tbl').prepend('<div id="end-message"><h2><span>Game Over!</span></h2></div>');
+  $('.open-card:not(.' + $('#board').data('card_value') +')').css('background-color','salmon');
+  $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
+}
+
+function turn_card(event){
+  if ($(event.target).prop('tagName') === 'DIV') {
+      $(event.target).toggleClass('open-card').css('opacity', '100');
+  } else if ($(event.target).prop('tagName') === 'SPAN') {
+      $(event.target).parent().toggleClass('open-card').css('opacity', '100');
+  }
+  $(event.target).off('click');
 }
 
 function get_random_card_value(board_size) {
@@ -168,7 +185,7 @@ function hide_all_cards(fadeout_duration) {
     }
 
     $('.card').fadeTo(fadeout_duration, 0, function(){
-      $(this).click(gameStep); // Add click event when all cards are hidden.
+      $(this).click(game_step); // Add click event when all cards are hidden.
     });
 
     // Use Timeout instead of function callback in fadeTo, because
