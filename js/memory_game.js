@@ -127,15 +127,19 @@ function gameStep(event) {
     var game_over = false;
     $('.open-card').each(function () {
         if ($(this).text() != eval_value) {
+            // Game over!
             $('.card').off('click');
             $('#board_tbl').prepend('<div id="end-message"><h2><span>Game Over!</span></h2></div>');
             $(this).css('background-color','salmon');
+            $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
             game_over = true;
         }
     })
     if (($('.open-card').length === Number($('#board_size').val()) ) && (! game_over)) {
+        // Game won!
         $('.card').off('click');
         $('#board_tbl').append('<div id="end-message"><h2><span>You have won!</span></h2></div>');
+        $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
 
     }
 }

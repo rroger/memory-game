@@ -44,6 +44,7 @@ span {
     height: 400px;
     background-color: lemonchiffon;
     border: 1px solid;
+    opacity: 0.95;
 }
 #search-value-box {
     color: navy;
