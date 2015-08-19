@@ -5,19 +5,8 @@
 //var game_values_template = ['a','a','a','b','b','b','c','c','c']
 
 function init_game() {
-  var board_size = Number($('#board_size').val());
-  var fadeout_duration = Number($('#fadeout_duration').val());
-
-  //Check input values:
-  if ( ! ( ( board_size >= 2 ) && ( board_size <= 26 ) ) ) {
-    alert("Please type a game size >= 2 and <= 26.");
-    return;
-  }
-  if ( ! ( fadeout_duration >= 0.4 ) ) {
-    alert("Please type a fadeout duration >= 0.4 secs!");
-    return;
-  }
-  
+  var board_size = get_board_size();
+  var fadeout_duration = get_fadeout_duration();
   generate_board(board_size);
   adapt_style(board_size);
   clear_value_to_search();
@@ -201,4 +190,25 @@ function hide_all_cards(fadeout_duration) {
 function play_sound() {
     var snd = new Audio("media/turn_card.mp3");
     snd.play();
+}
+
+function get_board_size() {
+  var board_size = Number($('#board_size').val());
+ 
+  if ( ! ( ( board_size >= 2 ) && ( board_size <= 26 ) ) ) {
+    alert("Please type a game size >= 2 and <= 26. Otherwise default value 3 is used.");
+    return 3;
+  } 
+  
+  return board_size;
+}
+
+function get_fadeout_duration() {
+  var fadeout_duration = Number($('#fadeout_duration').val());
+  if ( ! ( fadeout_duration >= 0.4 ) ) {
+    alert("Please type a fadeout duration >= 0.4 secs. Otherwise default value 5 sec is used.");
+    return 5;
+  }
+  
+  return fadeout_duration;
 }
