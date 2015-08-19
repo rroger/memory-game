@@ -10,7 +10,7 @@ function init_game() {
 
   //Check input values:
   if ( ! ( ( board_size >= 2 ) && ( board_size <= 26 ) ) ) {
-    alert("Please type a game size >= 2!");
+    alert("Please type a game size >= 2 and <= 26.");
     return;
   }
   if ( ! ( fadeout_duration >= 0.4 ) ) {
