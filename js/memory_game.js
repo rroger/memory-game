@@ -110,8 +110,9 @@ function clear_value_to_search() {
 }
 
 function game_step(event) {
-    play_sound();
-    turn_card(event);
+    var target_card = get_target_card(event);
+    turn_card(target_card);
+
     var game_status = get_game_status(event);
 
     if (game_status === 'won') {
@@ -149,13 +150,18 @@ function game_over(){
   $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
 }
 
-function turn_card(event){
-  if ($(event.target).prop('tagName') === 'DIV') {
-      $(event.target).toggleClass('open-card').css('opacity', '100');
-  } else if ($(event.target).prop('tagName') === 'SPAN') {
-      $(event.target).parent().toggleClass('open-card').css('opacity', '100');
-  }
-  $(event.target).off('click');
+
+function get_target_card(event) {
+    if ($(event.target).prop('tagName') === 'DIV') {
+        return $(event.target);
+    } else if ($(event.target).prop('tagName') === 'SPAN') {
+        return $(event.target).parent();
+    }
+}
+
+function turn_card(target_card){
+    target_card.toggleClass('open-card').css('opacity', '100');
+    $(target_card).off('click');
 }
 
 function get_random_card_value(board_size) {
@@ -187,10 +193,6 @@ function hide_all_cards(fadeout_duration) {
 
 }
 
-function play_sound() {
-    var snd = new Audio("media/turn_card.mp3");
-    snd.play();
-}
 
 function get_board_size() {
   var board_size = Number($('#board_size').val());
