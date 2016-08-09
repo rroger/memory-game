@@ -122,9 +122,9 @@ function game_step(event) {
 }
 
 function get_game_status(event) {
-  var eval_value = $('#board').data('card_value');
+  var card_type_to_be_opened = $('#board').data('card_value');
 
-  if ($('.open-card.' + eval_value).length != $('.open-card').length) {
+  if ($('.open-card.' + card_type_to_be_opened).length != $('.open-card').length) {
     // this means there is a card open, that has an other card value than
     // the searched card value, ergo it's game over.
     return 'game_over';
