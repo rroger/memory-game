@@ -5,12 +5,11 @@
 //var game_values_template = ['a','a','a','b','b','b','c','c','c']
 
 function init_game() {
-  var board_size = get_board_size();
-  var fadeout_duration = get_fadeout_duration();
+  var board_size = 4;
   generate_board(board_size);
   adapt_style(board_size);
   clear_value_to_search();
-  hide_all_cards(fadeout_duration*1000);
+  hide_all_cards(0);
 }
 
 function generate_board(board_size) {
@@ -74,9 +73,9 @@ function adapt_style(board_size) {
 function generate_game_values(board_size) {
   // board_size should be an integer >= 2 and <= 26.
   var game_values = [];
-  for (var i = 0; i < board_size; i++) {
+  for (var i = 0; i < board_size*2; i++) {
     var sym = String.fromCharCode("a".charCodeAt(0) + i);
-    for (var j = 0; j < board_size; j++) {
+    for (var j = 0; j < 2; j++) {
       game_values.push(sym);
     }
   }
@@ -123,15 +122,19 @@ function game_step(event) {
 }
 
 function get_game_status(event) {
-  var card_type_to_be_opened = $('#board').data('card_value');
+var open_unsolved_cards = $('.open-card:not(.solved)');
+  if (open_unsolved_cards.length > 1) {
+    var id1 = $('#'+ open_unsolved_cards[0].id);
+    var id2 = $('#'+ open_unsolved_cards[1].id);
 
-  if ($('.open-card.' + card_type_to_be_opened).length != $('.open-card').length) {
-    // this means there is a card open, that has an other card value than
-    // the searched card value, ergo it's game over.
-    return 'game_over';
-  }
-
-  if ($('.open-card').length === Number($('#board_size').val()) ) {
+    if (id1.text() == id2.text()) {
+      // the cards match, continue
+      open_unsolved_cards.toggleClass('solved');
+    } else {
+      open_unsolved_cards.toggleClass('open-card').fadeTo(1000, 0);
+    }
+}
+  if ($('.solved').length === 16) {
     return 'won';
   }
   return 'undecided';
@@ -140,14 +143,6 @@ function get_game_status(event) {
 function game_won(){
   $('.card').off('click');
   $('#board_tbl').append('<div id="end-message"><h2><span>You have won!</span></h2></div>');
-  $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
-}
-
-function game_over(){
-  $('.card').off('click');
-  $('#board_tbl').prepend('<div id="end-message"><h2><span>Game Over!</span></h2></div>');
-  $('.open-card:not(.' + $('#board').data('card_value') +')').css('background-color','salmon');
-  $(".card:not(.open-card)").css('background-color','#D1E0E0').css('opacity','0.10');
 }
 
 
@@ -161,12 +156,11 @@ function get_target_card(event) {
 
 function turn_card(target_card){
     target_card.toggleClass('open-card').css('opacity', '100');
-    $(target_card).off('click');
 }
 
 function get_random_card_value(board_size) {
     var rand = Math.random();
-    var board_size = Number($('#board_size').val());
+    //var board_size = Number($('#board_size').val());
     for (var i = 0; i < board_size; i++) {
       if (rand < ((i+1)/board_size)){
         return String.fromCharCode("a".charCodeAt(0) + i);
@@ -186,9 +180,8 @@ function hide_all_cards(fadeout_duration) {
     // Use Timeout instead of function callback in fadeTo, because
     // the code below should only be called once and not for every card.
     setTimeout(function () {
-        var searched_card_value = get_random_card_value();
+        var searched_card_value = get_random_card_value(4);
         $('#board').data('card_value', searched_card_value);
-        $('#search-value-box').text('Please open cards with ' + searched_card_value + '.');
     }, fadeout_duration);
 
 }
@@ -196,12 +189,12 @@ function hide_all_cards(fadeout_duration) {
 
 function get_board_size() {
   var board_size = Number($('#board_size').val());
- 
+
   if ( ! ( ( board_size >= 2 ) && ( board_size <= 26 ) ) ) {
     alert("Please type a game size >= 2 and <= 26. Otherwise default value 3 is used.");
     return 3;
-  } 
-  
+  }
+
   return board_size;
 }
 
@@ -211,6 +204,6 @@ function get_fadeout_duration() {
     alert("Please type a fadeout duration >= 0.4 secs. Otherwise default value 5 sec is used.");
     return 5;
   }
-  
+
   return fadeout_duration;
 }
